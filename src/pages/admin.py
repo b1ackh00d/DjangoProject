@@ -4,6 +4,10 @@ from django.contrib import admin
 from .models import *
 from import_export.admin import ImportExportModelAdmin
 @admin.register(Student_details)
+@admin.register(Internal_one_Total_marks)
+@admin.register(Internal_two_Total_marks)
+@admin.register(Semester_Total_marks)
+@admin.register(Assignment)
 
 class ViewStudentDetails(ImportExportModelAdmin):
     pass

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Upload</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+  <!-- Favicons -->
+
+
+  <!-- Favicons -->
+  <link href="/static/pages/img/favicon.png" rel="icon">
+  <link href="/static/pages/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,600,700,700i|Montserrat:300,400,500,600,700" rel="stylesheet">
+	<!-- script -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- Bootstrap CSS File -->
+  <link href="/static/pages/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="/static/pages/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/static/pages/lib/animate/animate.min.css" rel="stylesheet">
+  <link href="/static/pages/lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+  <link href="/static/pages/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+  <link href="/static/pages/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link rel="stylesheet" href="/static/pages/css/style.css" type="text/css">
+
+
+</head>
+
+<body>
+
+  <header id="header">
+
+    <div id="topbar">
+      <div class="container">
+        <div class="social-links">
+          <a href="https://twitter.com/kctofficial?lang=en" class="twitter"><i class="fa fa-twitter"></i></a>
+          <a href="https://www.facebook.com/KCT.edu/" class="facebook"><i class="fa fa-facebook"></i></a>
+          <a href="https://in.linkedin.com/school/kct/" class="linkedin"><i class="fa fa-linkedin"></i></a>
+          <a href="https://www.instagram.com/kct_84/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="logo float-left">
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <h1 class="text-light"><a href="#intro" class="scrollto"><span>Rapid Calculations</span></a></h1>
+        <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
+      </div>
+
+      <nav class="main-nav float-right d-none d-lg-block">
+        <ul>
+          <li class="active"><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'login' %}">Login</a></li>
+          <li><a href="#footer">Contact Us</a></li>
+        </ul>
+      </nav><!-- .main-nav -->
+
+    </div>
+  </header><!-- #header -->
+
+
+  <!--==========================
+    Intro Section
+  ============================-->
+<br><br><br><br><br>
+  <section id="intro" >
+    <div class="container">
+
+      <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="form-group row">
+            <label for="id_{{ field.name }}" class="col-2 col-form-label"> {{ field.label }}</label>
+            <div class="col-10">
+              {{ field }}
+            </div>
+          </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary" name="button">Add CO</button>
+      </form>
+
+    </div>
+  </section>
+
+
+
+    <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+    <!-- Uncomment below i you want to use a preloader -->
+    <!-- <div id="preloader"></div> -->
+
+    <!-- JavaScript Libraries -->
+    <script src="/static/pages/lib/jquery/jquery.min.js"></script>
+    <script src="/static/pages/lib/jquery/jquery-migrate.min.js"></script>
+    <script src="/static/pages/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/pages/lib/easing/easing.min.js"></script>
+    <script src="/static/pages/lib/mobile-nav/mobile-nav.js"></script>
+    <script src="/static/pages/lib/wow/wow.min.js"></script>
+    <script src="/static/pages/lib/waypoints/waypoints.min.js"></script>
+    <script src="/static/pages/lib/counterup/counterup.min.js"></script>
+    <script src="/static/pages/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="/static/pages/lib/isotope/isotope.pkgd.min.js"></script>
+    <script src="/static/pages/lib/lightbox/js/lightbox.min.js"></script>
+    <!-- Contact Form JavaScript File -->
+    <script src="/static/pages/contactform/contactform.js"></script>
+
+    <!-- Template Main Javascript File -->
+    <script src="/static/pages/js/main.js"></script>
+
+  </body>
+  </html>

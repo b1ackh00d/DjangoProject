@@ -91,15 +91,29 @@
           <p> Only accepts CSV file</p>
           <button type="Submit"> Upload</button>
         </form>
-      
+
         {% endif %}
       </div>
+      <!-- <div class="container d-flex h-50" align="left"> -->
+        <div class="col-md-6 intro-info order-md-first order-last">
+          <a href="{% url 'drop_table' %}" class="btn-get-started scrollto"> Click here to Drop Existing Table </a>
+        </div>
+        <div class="col-md-6 intro-info order-md-first order-last">
+          <a href="{% url 'display_student' %}" class="btn-get-started scrollto"> Display Students</a>
+        </div>
+      <!-- </div> -->
     </div>
+
+    <!-- <div class="container h-100">
+      <div class="row">
+      <a href="{% url 'drop_table' %}" class="btn-get-started scrollto" >Click here to Drop Existing Table</a>
+    </div>
+
     <div class="container h-50">
       <div class="row">
       <a href="{% url 'display_student' %}" class="btn-get-started scrollto" > Display Students</a>
     </div>
-    </div>
+    </div> -->
 </section>
 </br></br></br></br></br>
 
