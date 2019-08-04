@@ -20,3 +20,8 @@ class AssignmentForm(forms.ModelForm):
     class Meta:
         model = Assignment
         fields = ('co_num', 'total_marks_for_co')
+
+class TargetCOForm(forms.ModelForm):
+    class Meta:
+        model = TargetCO
+        fields = ('co_num', 'target_co')

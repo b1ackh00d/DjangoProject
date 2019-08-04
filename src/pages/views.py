@@ -62,6 +62,9 @@ def show_marks_attributes(request, model, html_file):
 def add_assignment(request):
     return add_marks_attributes(request, AssignmentForm, show_assignment, 'add_assignment.html')
 
+def add_targetCOmarks(request):
+    return add_marks_attributes(request, TargetCOForm, show_targetCOmarks, 'add_targetCOmarks.html')
+
 def add_marks_internal_one(request):
     return add_marks_attributes(request, InternalOneMarksForm, show_marks_internal_one, 'add_marks_internal_one.html')
 
@@ -73,6 +76,9 @@ def add_marks_semester(request):
 
 def show_assignment(request):
     return show_marks_attributes(request, Assignment, "assignment_marks.html")
+
+def show_targetCOmarks(request):
+    return show_marks_attributes(request, TargetCO, "targetCOmarks.html")
 
 def show_marks_internal_one(request):
     return show_marks_attributes(request, Internal_one_Total_marks, "internal_one_marks.html")
@@ -95,6 +101,9 @@ def del_marks_semester(request, pk):
 def del_marks_assignment(request, pk):
     return del_attributes(request, pk, Assignment, "assignment_marks.html")
 
+def del_marks_targetCOmarks(request, pk):
+    return del_attributes(request, pk, TargetCO, "targetCOmarks.html")
+
 def edit_marks_internal_one(request, pk):
     return edit_attributes(request, pk, Internal_one_Total_marks, InternalOneMarksForm, "show_marks_internal_one")
 
@@ -106,6 +115,9 @@ def edit_marks_semester(request, pk):
 
 def edit_marks_assignment(request, pk):
     return edit_attributes(request, pk, Assignment, AssignmentForm, "show_assignment")
+
+def edit_marks_targetCO(request, pk):
+    return edit_attributes(request, pk, TargetCO, TargetCOForm, "show_marks_targetCO")
 
 
 def select_sub(request,*args, **kwargs):
@@ -134,6 +146,37 @@ def upload_student_details(request, *args, **kwargs):
     context = {}
     return render(request, template, context)
 
+
+def upload_internal_marks(request, model):
+    template = "upload_internal_one.html"
+    prompt = {
+        'order' : 'Order of csv should be id(empty), reg_num, student_name'
+    }
+    if request.method == "GET":
+        return render(request, template, prompt)
+
+    csv_file = request.FILES['file']
+    if not csv_file.name.endswith('.csv'):
+        messages.error(request, 'This is not a csv file')
+    data_set = csv_file.read().decode('UTF-8')
+    io_string = io.StringIO(data_set)
+    next(io_string)
+    for column in csv.reader(io_string, delimiter=',', quotechar="|"):
+        _, created = model.objects.update_or_create(
+            id = column[0],
+            reg_num = column[1],
+            student_name = column[2],
+            qn1 = column[3],qn2 = column[4],qn3 = column[5],qn4 = column[6],qn5 = column[7],qn6 = column[8],qn7 = column[9],qn8 = column[10],qn9= column[11],qn10 = column[12],qn11= column[13],qn12 = column[14],qn13 = column[15],qn14 = column[16],qn15 = column[17],qn16 = column[18],qn17 = column[19],qn18 = column[20],qn19 = column[21]
+        )
+    context = {}
+    return render(request, template, context)
+
+def upload_internal_one(request):
+    return upload_internal_marks(request, UploadInternalOneMarks)
+
+def upload_internal_two(request):
+    return upload_internal_marks(request, UploadInternalTwoMarks)
+
 def show_students(request, *args, **kwargs):
     items = Student_details.objects.all()
     context = {
@@ -141,6 +184,12 @@ def show_students(request, *args, **kwargs):
     }
     return render(request, "display_student.html", context)
 
-def drop_table(request, *args, **kwargs):
-    Student_details.objects.all().delete()
-    return render(request, "display_student.html", {})
+def drop_table(request, model, html_file):
+    model.objects.all().delete()
+    return render(request, html_file, {})
+
+def drop_student_table(request):
+    return drop_table(request, Student_details, "display_student.html")
+
+def drop_internal_table(request):
+    return drop_table(request, UploadInternalOneMarks, "upload_internal_one.html")

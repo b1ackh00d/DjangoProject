@@ -8,6 +8,10 @@ from import_export.admin import ImportExportModelAdmin
 @admin.register(Internal_two_Total_marks)
 @admin.register(Semester_Total_marks)
 @admin.register(Assignment)
+@admin.register(TargetCO)
+@admin.register(UploadInternalOneMarks)
+@admin.register(UploadInternalTwoMarks)
+@admin.register(UploadAssignmentMarks)
 
 class ViewStudentDetails(ImportExportModelAdmin):
     pass
