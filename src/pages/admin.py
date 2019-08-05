@@ -12,6 +12,7 @@ from import_export.admin import ImportExportModelAdmin
 @admin.register(UploadInternalOneMarks)
 @admin.register(UploadInternalTwoMarks)
 @admin.register(UploadAssignmentMarks)
+@admin.register(UploadSemesterMarks)
 
 class ViewStudentDetails(ImportExportModelAdmin):
     pass

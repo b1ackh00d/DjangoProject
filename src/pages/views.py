@@ -147,8 +147,8 @@ def upload_student_details(request, *args, **kwargs):
     return render(request, template, context)
 
 
-def upload_internal_marks(request, model):
-    template = "upload_internal_one.html"
+def upload_internal_marks(request, model,html_file):
+    template = html_file
     prompt = {
         'order' : 'Order of csv should be id(empty), reg_num, student_name'
     }
@@ -172,10 +172,58 @@ def upload_internal_marks(request, model):
     return render(request, template, context)
 
 def upload_internal_one(request):
-    return upload_internal_marks(request, UploadInternalOneMarks)
+    return upload_internal_marks(request, UploadInternalOneMarks, "upload_internal_one.html")
 
 def upload_internal_two(request):
-    return upload_internal_marks(request, UploadInternalTwoMarks)
+    return upload_internal_marks(request, UploadInternalTwoMarks, "upload_internal_two.html")
+
+def upload_assignment_marks(request):
+    template = "upload_assignment_marks.html"
+    prompt = {
+        'order' : 'Order of csv should be id(empty), reg_num, student_name'
+    }
+    if request.method == "GET":
+        return render(request, template, prompt)
+
+    csv_file = request.FILES['file']
+    if not csv_file.name.endswith('.csv'):
+        messages.error(request, 'This is not a csv file')
+    data_set = csv_file.read().decode('UTF-8')
+    io_string = io.StringIO(data_set)
+    next(io_string)
+    for column in csv.reader(io_string, delimiter=',', quotechar="|"):
+        _, created = UploadAssignmentMarks.objects.update_or_create(
+            id = column[0],
+            reg_num = column[1],
+            student_name = column[2],
+            CO1 = column[3],CO2 = column[4],CO3 = column[5],CO4 = column[6],CO5 = column[7],CO6 = column[8],
+        )
+    context = {}
+    return render(request, template, context)
+
+def upload_semester_marks(request):
+    template = "upload_semester_marks.html"
+    prompt = {
+        'order' : 'Order of csv should be id(empty), reg_num, student_name'
+    }
+    if request.method == "GET":
+        return render(request, template, prompt)
+
+    csv_file = request.FILES['file']
+    if not csv_file.name.endswith('.csv'):
+        messages.error(request, 'This is not a csv file')
+    data_set = csv_file.read().decode('UTF-8')
+    io_string = io.StringIO(data_set)
+    next(io_string)
+    for column in csv.reader(io_string, delimiter=',', quotechar="|"):
+        _, created = UploadSemesterMarks.objects.update_or_create(
+            id = column[0],
+            reg_num = column[1],
+            student_name = column[2],
+            sem_marks = column[3],no_of_CO = column[4], marks_for_each_CO = column[5]
+        )
+    context = {}
+    return render(request, template, context)
 
 def show_students(request, *args, **kwargs):
     items = Student_details.objects.all()
@@ -191,5 +239,14 @@ def drop_table(request, model, html_file):
 def drop_student_table(request):
     return drop_table(request, Student_details, "display_student.html")
 
-def drop_internal_table(request):
+def drop_internal_one_table(request):
     return drop_table(request, UploadInternalOneMarks, "upload_internal_one.html")
+
+def drop_internal_two_table(request):
+    return drop_table(request, UploadInternalTwoMarks, "upload_internal_two.html")
+
+def drop_assignment_table(request):
+    return drop_table(request, UploadAssignmentMarks, "upload_assignment_marks.html")
+
+def drop_semester_table(request):
+    return drop_table(request, UploadSemesterMarks, "upload_semester_marks.html")

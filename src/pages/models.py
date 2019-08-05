@@ -21,7 +21,7 @@ class Assignment(models.Model):
     )
     co_num = models.IntegerField(choices=choices, default = 1)
     total_marks_for_co = models.IntegerField(blank=False,
-    validators=[MaxValueValidator(10), MinValueValidator(1)])
+    validators=[MaxValueValidator(10), MinValueValidator(0)])
 
     def __str__(self):
         return 'CO type : {0} CO_weightage : {1}'.format(self.co_num, self.total_marks_for_co)
@@ -36,7 +36,7 @@ class TargetCO(models.Model):
         (6, 'CO6')
     )
     co_num = models.IntegerField(choices=choices, default = 1)
-    target_co = models.DecimalField(max_digits=50, decimal_places=2)
+    target_co = models.DecimalField(max_digits=4, decimal_places=2)
 
     def __str__(self):
         return 'CO type : {0} Target CO mark : {1}'.format(self.co_num, self.target_co)
@@ -74,12 +74,19 @@ class UploadAssignmentMarks(models.Model):
 
     reg_num = models.CharField(max_length=10, blank=False)
     student_name = models.CharField(max_length=50, blank=False)
-    CO1 = models.DecimalField(max_digits=50, decimal_places=2)
-    CO2 = models.DecimalField(max_digits=50, decimal_places=2)
-    CO3 = models.DecimalField(max_digits=50, decimal_places=2)
-    CO4 = models.DecimalField(max_digits=50, decimal_places=2)
-    CO5 = models.DecimalField(max_digits=50, decimal_places=2)
-    CO6 = models.DecimalField(max_digits=50, decimal_places=2)
+    CO1 = models.DecimalField(max_digits=6, decimal_places=4)
+    CO2 = models.DecimalField(max_digits=6, decimal_places=4)
+    CO3 = models.DecimalField(max_digits=6, decimal_places=4)
+    CO4 = models.DecimalField(max_digits=6, decimal_places=4)
+    CO5 = models.DecimalField(max_digits=6, decimal_places=4)
+    CO6 = models.DecimalField(max_digits=6, decimal_places=4)
+
+class UploadSemesterMarks(models.Model):
+    reg_num = models.CharField(max_length=10, blank=False)
+    student_name = models.CharField(max_length=50, blank=False)
+    sem_marks = models.DecimalField(max_digits=7, decimal_places=4)
+    no_of_CO = models.IntegerField(default=1,validators=[MaxValueValidator(10), MinValueValidator(1)])
+    marks_for_each_CO = models.IntegerField(blank=False,validators=[MaxValueValidator(50), MinValueValidator(1)])
 
 class UploadMarks(models.Model):
     # id = models.AutoField(primary_key=True)

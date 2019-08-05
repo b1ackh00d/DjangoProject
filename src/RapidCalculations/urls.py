@@ -27,6 +27,9 @@ urlpatterns = [
     path('display_student/', show_students, name="display_student"),
     path('upload_student/', upload_student_details, name="upload_student"),
     path('upload_internal_one/', upload_internal_one, name="upload_internal_one"),
+    path('upload_internal_two/', upload_internal_two, name="upload_internal_two"),
+    path('upload_assignment_marks/', upload_assignment_marks, name="upload_assignment_marks"),
+    path('upload_semester_marks/', upload_semester_marks, name="upload_semester_marks"),
     path('Subject/', select_sub, name="select_sub"),
     path('show_marks_internal_one/', show_marks_internal_one, name="show_marks_internal_one"),
     path('show_marks_internal_two/', show_marks_internal_two, name="show_marks_internal_two"),
@@ -49,7 +52,10 @@ urlpatterns = [
     path('delete_marks_assignment/<pk>/', del_marks_assignment, name='del_marks_assignment'),
     path('edit_marks_assignment/<pk>/', edit_marks_assignment, name='edit_marks_assignment'),
     path('delete/', drop_student_table, name="drop_student_table"),
-    path('delete_internal/', drop_internal_table, name="drop_internal_table"),
+    path('delete_internal_one_table/', drop_internal_one_table, name="drop_internal_one_table"),
+    path('delete_internal_two_table/', drop_internal_two_table, name="drop_internal_two_table"),
+    path('delete_assignment_table/', drop_assignment_table, name="drop_assignment_table"),
+    path('delete_semester_table/', drop_semester_table, name="drop_semester_table"),
     path('admin/', admin.site.urls, name="admin"),
 ]
 if settings.DEBUG:
