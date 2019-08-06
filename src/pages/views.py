@@ -53,17 +53,24 @@ def del_attributes(request, pk, model, html_file):
     return render(request, html_file, context)
 
 def show_marks_attributes(request, model, html_file):
+    target_stu_items = TargetCOStudent.objects.all()
+    target_cls_iems = TargetCOClass.objects.all()
     items = model.objects.all()
     context = {
         'marks_items' : items,
+        'target_co_stu' : target_stu_items,
+        'target_co_cls' : target_cls_iems,
     }
     return render(request, html_file, context)
 
 def add_assignment(request):
     return add_marks_attributes(request, AssignmentForm, show_assignment, 'add_assignment.html')
 
-def add_targetCOmarks(request):
-    return add_marks_attributes(request, TargetCOForm, show_targetCOmarks, 'add_targetCOmarks.html')
+def add_targetCOStudentmarks(request):
+    return add_marks_attributes(request, TargetCOStudentForm, show_targetCOStudentmarks, 'add_targetCOStudentmarks.html')
+
+def add_targetCOClassmarks(request):
+    return add_marks_attributes(request, TargetCOClassForm, show_targetCOClassmarks, 'add_targetCOClassmarks.html')
 
 def add_marks_internal_one(request):
     return add_marks_attributes(request, InternalOneMarksForm, show_marks_internal_one, 'add_marks_internal_one.html')
@@ -77,8 +84,11 @@ def add_marks_semester(request):
 def show_assignment(request):
     return show_marks_attributes(request, Assignment, "assignment_marks.html")
 
-def show_targetCOmarks(request):
-    return show_marks_attributes(request, TargetCO, "targetCOmarks.html")
+def show_targetCOStudentmarks(request):
+    return show_marks_attributes(request, TargetCOStudent, "targetCOmarks.html")
+
+def show_targetCOClassmarks(request):
+    return show_marks_attributes(request, TargetCOClass, "targetCOmarks.html")
 
 def show_marks_internal_one(request):
     return show_marks_attributes(request, Internal_one_Total_marks, "internal_one_marks.html")
@@ -101,8 +111,11 @@ def del_marks_semester(request, pk):
 def del_marks_assignment(request, pk):
     return del_attributes(request, pk, Assignment, "assignment_marks.html")
 
-def del_marks_targetCOmarks(request, pk):
-    return del_attributes(request, pk, TargetCO, "targetCOmarks.html")
+def del_marks_targetCOStudentmarks(request, pk):
+    return del_attributes(request, pk, TargetCOStudent, "targetCOmarks.html")
+
+def del_marks_targetCOClassmarks(request, pk):
+    return del_attributes(request, pk, TargetCOClass, "targetCOmarks.html")
 
 def edit_marks_internal_one(request, pk):
     return edit_attributes(request, pk, Internal_one_Total_marks, InternalOneMarksForm, "show_marks_internal_one")
@@ -116,9 +129,11 @@ def edit_marks_semester(request, pk):
 def edit_marks_assignment(request, pk):
     return edit_attributes(request, pk, Assignment, AssignmentForm, "show_assignment")
 
-def edit_marks_targetCO(request, pk):
-    return edit_attributes(request, pk, TargetCO, TargetCOForm, "show_marks_targetCO")
+def edit_marks_targetCOStudent(request, pk):
+    return edit_attributes(request, pk, TargetCOStudent, TargetCOStudentForm, "show_marks_targetCOStudent")
 
+def edit_marks_targetCOClass(request, pk):
+    return edit_attributes(request, pk, TargetCOClass, TargetCOClassForm, "show_marks_targetCOClass")
 
 def select_sub(request,*args, **kwargs):
     return render(request, "subject.html", {})

@@ -41,6 +41,12 @@ class TargetCO(models.Model):
     def __str__(self):
         return 'CO type : {0} Target CO mark : {1}'.format(self.co_num, self.target_co)
 
+class TargetCOStudent(TargetCO):
+    pass
+
+class TargetCOClass(TargetCO):
+    pass
+
 class Total_marks(models.Model):
     qn_num = models.IntegerField(blank=False,
     validators=[MaxValueValidator(20), MinValueValidator(1)])

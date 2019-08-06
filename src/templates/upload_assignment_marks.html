@@ -95,12 +95,19 @@
         {% endif %}
       </div>
       <!-- <div class="container d-flex h-50" align="left"> -->
+      <div class="row">
         <div class="col-md-6 intro-info order-md-first order-last">
           <a href="{% url 'drop_assignment_table' %}" class="btn-get-started scrollto"> Click here to Drop Existing Table </a>
         </div>
         <div class="col-md-6 intro-info order-md-first order-last">
           <a href="{% url 'upload_assignment_marks' %}" class="btn-get-started scrollto"> Refresh and Upload</a>
         </div>
+      </div>
+      <div class = "row">
+        <div class="col-md-6 intro-info order-md-first order-last">
+          <a href="{% url 'select_sub' %}" class="btn btn-danger">Go back to Subject</a>
+        </div>
+      </div>
       <!-- </div> -->
     </div>
 

@@ -73,91 +73,27 @@
   <!--==========================
     Intro Section
   ============================-->
-  <br><br><br><br><br>
-  <section id="intro">
+<br><br><br><br><br>
+  <section id="intro" >
     <div class="container">
-    <div class="row">
-      <div class="col-sm-6">
-        <br>
-        <h4>Target CO for a Student</h4>
-        <div class="row table-responsive">
-          <br>
-          <div class="button">
-            <a href="{% url 'show_marks_targetCOStudent' %}" class="btn btn-primary btn-md" role="button"> Refresh</a>
-            <a href="{% url 'add_marks_targetCOStudent' %}" class="btn btn-warning btn-sm" role="button"> +</a>
+      <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="form-group row">
+            <label for="id_{{ field.name }}" class="col-2 col-form-label"> {{ field.label }}</label>
+            <div class="col-10">
+              {{ field }}
+            </div>
           </div>
-          <br>
-            <table class="table table-hover table-stripped">
-              <thead>
-                <tr>
-                  <th>CO type</th>
-                  <th>Target CO marks</th>
-                </tr>
-              </thead>
+        {% endfor %}
 
-              <tbody>
+        <button type="submit" class="btn btn-primary" name="button">Add mark for class</button>
+      </form>
 
-                  {% for item in target_co_stu %}
-                  <tr>
-                    <td> {{ item.co_num }}</td>
-                    <td>{{ item.target_co }}</td>
-                    <td>
-                      <a href="{% url 'edit_marks_targetCOStudent' item.pk %}" class="btn btn-warning btn-sm" role="button"> Edit</a>
-                    </td>
-                    <td>
-                      <a href="{% url 'del_marks_targetCOStudentmarks' item.pk %}" class="btn btn-danger btn-sm" role="button"> Del</a>
-                    </td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-            </table>
-      </div>
     </div>
-    <div class="col-sm-6">
-      <br>
-      <h4>Target CO for a Class</h4>
-      <div class="row table-responsive">
-        <br>
-        <div class="button">
-          <a href="{% url 'show_marks_targetCOClass' %}" class="btn btn-primary btn-md" role="button"> Refresh</a>
-          <a href="{% url 'add_marks_targetCOClass' %}" class="btn btn-warning btn-sm" role="button"> +</a>
-        </div>
-        <br>
-          <table class="table table-hover table-stripped">
-            <thead>
-              <tr>
-                <th>CO type</th>
-                <th>Target CO marks</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-                {% for item in target_co_cls %}
-                <tr>
-                  <td> {{ item.co_num }}</td>
-                  <td>{{ item.target_co }}</td>
-                  <td>
-                    <a href="{% url 'edit_marks_targetCOClass' item.pk %}" class="btn btn-warning btn-sm" role="button"> Edit</a>
-                  </td>
-                  <td>
-                    <a href="{% url 'del_marks_targetCOClassmarks' item.pk %}" class="btn btn-danger btn-sm" role="button"> Del</a>
-                  </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-          </table>
-    </div>
-  </div>
-      <div class="container d-flex h-100">
-        <div class="col-md-6 intro-info order-md-first order-last">
-          <a href="{% url 'select_sub' %}" class="btn-get-started scrollto"> Go Back and Upload Remaining </a>
-        </div>
-      </div>
   </section>
 
 
-<br><br><br><br><br>
 
 
 

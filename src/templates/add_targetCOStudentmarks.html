@@ -76,7 +76,6 @@
 <br><br><br><br><br>
   <section id="intro" >
     <div class="container">
-
       <form method="post">
           {% csrf_token %}
           {% for field in form %}
@@ -88,7 +87,7 @@
           </div>
         {% endfor %}
 
-        <button type="submit" class="btn btn-primary" name="button">Add mark</button>
+        <button type="submit" class="btn btn-primary" name="button">Add mark for student</button>
       </form>
 
     </div>

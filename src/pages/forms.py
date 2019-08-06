@@ -21,7 +21,12 @@ class AssignmentForm(forms.ModelForm):
         model = Assignment
         fields = ('co_num', 'total_marks_for_co')
 
-class TargetCOForm(forms.ModelForm):
+class TargetCOStudentForm(forms.ModelForm):
     class Meta:
-        model = TargetCO
+        model = TargetCOStudent
+        fields = ('co_num', 'target_co')
+
+class TargetCOClassForm(forms.ModelForm):
+    class Meta:
+        model = TargetCOClass
         fields = ('co_num', 'target_co')
