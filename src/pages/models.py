@@ -57,7 +57,8 @@ class Total_marks(models.Model):
         (2, 'CO2'),
         (3, 'CO3'),
         (4, 'CO4'),
-        (5, 'CO5')
+        (5, 'CO5'),
+        (6, 'CO6')
     )
     CO_for_each_qn = models.IntegerField(choices=choices, default = 1)
 
@@ -94,8 +95,73 @@ class UploadSemesterMarks(models.Model):
     no_of_CO = models.IntegerField(default=1,validators=[MaxValueValidator(10), MinValueValidator(1)])
     marks_for_each_CO = models.IntegerField(blank=False,validators=[MaxValueValidator(50), MinValueValidator(1)])
 
-class UploadMarks(models.Model):
-    # id = models.AutoField(primary_key=True)
+class UploadInternalOneMarks(models.Model):
+    id = models.AutoField(primary_key=True)
+    reg_num = models.CharField(default = "", max_length=10, blank=False)
+    student_name = models.CharField(default = "", max_length=50, blank=False)
+
+    qn1 = models.IntegerField(default=0,validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn2 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn3 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn4 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn5 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn6 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn7 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn8 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn9 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn10 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn11 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn12 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn13 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn14 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn15 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn16 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn17 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn18 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    qn19 = models.IntegerField(default=0,
+    validators=[MaxValueValidator(20), MinValueValidator(0)])
+
+    def __str__(self):
+        return 'Internal One Reg Num : {0} Name : {1}'.format(self.reg_num, self.student_name)
+
+
+class UploadInternalTwoMarks(models.Model):
+    id = models.AutoField(primary_key=True)
     reg_num = models.CharField(max_length=10, blank=False)
     student_name = models.CharField(max_length=50, blank=False)
 
@@ -156,11 +222,4 @@ class UploadMarks(models.Model):
     validators=[MaxValueValidator(20), MinValueValidator(0)])
 
     def __str__(self):
-        return 'Reg Num : {0} Name : {1}'.format(self.reg_num, self.student_name)
-
-class UploadInternalOneMarks(UploadMarks):
-    pass
-
-
-class UploadInternalTwoMarks(UploadMarks):
-    pass
+        return 'Internal two Reg Num : {0} Name : {1}'.format(self.reg_num, self.student_name)

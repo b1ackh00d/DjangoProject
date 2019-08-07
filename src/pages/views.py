@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from .forms import *
 from .models import *
 
+
 # Create your views here.
 
 
@@ -162,8 +163,8 @@ def upload_student_details(request, *args, **kwargs):
     return render(request, template, context)
 
 
-def upload_internal_marks(request, model,html_file):
-    template = html_file
+def upload_internal_one(request):
+    template = "upload_internal_one.html"
     prompt = {
         'order' : 'Order of csv should be id(empty), reg_num, student_name'
     }
@@ -177,7 +178,7 @@ def upload_internal_marks(request, model,html_file):
     io_string = io.StringIO(data_set)
     next(io_string)
     for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-        _, created = model.objects.update_or_create(
+        _, created = UploadInternalOneMarks.objects.update_or_create(
             id = column[0],
             reg_num = column[1],
             student_name = column[2],
@@ -186,11 +187,29 @@ def upload_internal_marks(request, model,html_file):
     context = {}
     return render(request, template, context)
 
-def upload_internal_one(request):
-    return upload_internal_marks(request, UploadInternalOneMarks, "upload_internal_one.html")
-
 def upload_internal_two(request):
-    return upload_internal_marks(request, UploadInternalTwoMarks, "upload_internal_two.html")
+    template = "upload_internal_two.html"
+    prompt = {
+        'order' : 'Order of csv should be id(empty), reg_num, student_name'
+    }
+    if request.method == "GET":
+        return render(request, template, prompt)
+
+    csv_file = request.FILES['file']
+    if not csv_file.name.endswith('.csv'):
+        messages.error(request, 'This is not a csv file')
+    data_set = csv_file.read().decode('UTF-8')
+    io_string = io.StringIO(data_set)
+    next(io_string)
+    for column in csv.reader(io_string, delimiter=',', quotechar="|"):
+        _, created = UploadInternalTwoMarks.objects.update_or_create(
+            id = column[0],
+            reg_num = column[1],
+            student_name = column[2],
+            qn1 = column[3],qn2 = column[4],qn3 = column[5],qn4 = column[6],qn5 = column[7],qn6 = column[8],qn7 = column[9],qn8 = column[10],qn9= column[11],qn10 = column[12],qn11= column[13],qn12 = column[14],qn13 = column[15],qn14 = column[16],qn15 = column[17],qn16 = column[18],qn17 = column[19],qn18 = column[20],qn19 = column[21]
+        )
+    context = {}
+    return render(request, template, context)
 
 def upload_assignment_marks(request):
     template = "upload_assignment_marks.html"
@@ -265,3 +284,44 @@ def drop_assignment_table(request):
 
 def drop_semester_table(request):
     return drop_table(request, UploadSemesterMarks, "upload_semester_marks.html")
+
+
+
+# Calculations
+
+def CO1_Calculation(request, model1, model2, model3):
+    total_internal_one = model1.objects.filter(CO_for_each_qn=1).aggregate(Sum('marks_for_each_qn'))['marks_for_each_qn__sum'] #int
+    total_assignment = model2.objects.filter(co_num=1).aggregate(Sum('total_marks_for_co'))['total_marks_for_co__sum'] #dict
+    i = list(UploadSemesterMarks.objects.all())
+    total_semester = i[0].marks_for_each_CO #int
+
+# co1_type_qn's
+# for i in Internal_one_Total_marks.objects.filter(CO_for_each_qn=1):
+# ...     co1.append(i.qn_num)
+
+
+    context = {
+
+    }
+    return render(request, "result_1.html", context)
+
+
+# for i in Internal_one_Total_marks.objects.filter(CO_for_each_qn=1):
+#         co1.append("qn" + str(i.qn_num))
+
+
+def func(id__1, cls):
+     total = 0
+     l = list(cls.objects.filter(id = id__1).values())
+     co = ['qn1', 'qn2', 'qn6', 'qn8', 'qn9', 'qn11', 'qn12', 'qn13', 'qn16', 'qn17', 'qn18']
+     for i in co:
+             for j in l[0]:
+                     if (i == j):
+                             total += l[0].get(j)
+     return total
+
+def giveCOqns(cls, co):
+     res = []
+     for i in cls.objects.filter(CO_for_each_qn=co):
+             res.append("qn" + str(i.qn_num))
+     return res
