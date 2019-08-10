@@ -76,6 +76,14 @@
 <br><br><br><br><br>
   <section id="intro">
     <div class="container h-50">
+      <div>
+        <br>
+        <h5><dt> Instructions </dt></h6>
+        <h7><i>1)  Click <strong>'Drop Existing Table' </strong> button.</i></h7><br>
+        <h7><i>2)  And then Click <strong> 'Refresh and Upload' </strong> button.</i></h7><br>
+        <h7><i>3)  The CSV file must have <strong> id, reg_num, student_name, grade </strong>fields.</i></h7>
+
+      </div>
       <div class="row">
         {% if messages %}
             {% for message in messages %}
@@ -96,19 +104,18 @@
       </div>
       <!-- <div class="container d-flex h-50" align="left"> -->
       <div class = "row">
-        <div class="col-md-6 intro-info order-md-first order-last">
+        <div class="col-md-5 intro-info order-md-first order-last">
           <a href="{% url 'drop_semester_table' %}" class="btn-get-started scrollto"> Click here to Drop Existing Table </a>
         </div>
-        <div class="col-md-6 intro-info order-md-first order-last">
+        <div class="col-md-3 intro-info order-md-first order-last">
           <a href="{% url 'upload_semester_marks' %}" class="btn-get-started scrollto"> Refresh and Upload</a>
         </div>
-      </div>
-
-      <div class = "row">
-        <div class="col-md-6 intro-info order-md-first order-last">
+        <div class="col-md-3 intro-info order-md-first order-last">
           <a href="{% url 'select_sub' %}" class="btn btn-danger">Go back to Subject</a>
         </div>
       </div>
+
+
       <!-- </div> -->
     </div>
 

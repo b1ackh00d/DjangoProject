@@ -77,7 +77,15 @@
     <div class="container d-flex h-50">
       <div class="row justify-content-left align-self-center">
         <div class="col-md-10 intro-info order-md-first order-last">
-          <h5>Select Examinations</h5>
+        <div>
+          <br><br><br><br><br><br><br><br><br>
+          <h5><dt> Instructions </dt></h6>
+          <h7>1) <i>Select respective examinations and upload marks.</i></h7><br>
+          <h7>2) <i>Click 'Upload Targeted CO' after finishing first step and Upload Target CO's.</i></h7><br>
+          <h7>3) <i>Click <strong>'Calculate CO' only after completing first two steps.</strong></i></h7><br>
+          <h7>4) <i>After all 3 steps, <strong>Click 'Display Result' to see the results.</strong></i></h7>
+        </div><br>
+          <h6><dt>Select Examinations</dt></h6>
         <a href="{% url 'show_marks_internal_one' %}" style="margin:5px;" class="btn btn-outline-primary">Internal Assesment One</a>
         <a href="{% url 'show_marks_internal_two' %}" style="margin:5px;" class="btn btn-outline-secondary">Internal Assesment Two</a>
         <a href="{% url 'show_assignment' %}" style="margin:5px;" class="btn btn-outline-success">Assignment</a>
@@ -91,12 +99,18 @@
       </div>
       </div>
     </div>
-
+    <br><br><br><br><br><br>
     <div class="container d-flex h-100">
       <div class="col-md-6 intro-info order-md-first order-last">
-        <a href="{% url 'display_student' %}" class="btn-get-started scrollto"> Upload Target CO </a>
+        <a href="{% url 'calculate_CO' %}" class="btn-get-started scrollto"> Calculate CO </a>
+        <h6>{{ form }}</h6>
+      </div>
+      <div class="col-md-6 intro-info order-md-first order-last">
+        <a href="{% url 'show_CO_result' %}" class="btn btn-danger">Display Result</a>
       </div>
     </div>
+    </div>
+
   </section>
 
 

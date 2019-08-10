@@ -74,8 +74,17 @@ class Internal_one_Total_marks(Total_marks):
 class Internal_two_Total_marks(Total_marks):
     pass
 
-class Semester_Total_marks(Total_marks):
-    pass
+class Semester_Total_marks(models.Model):
+    choices = (
+        (15, 'R2015'),
+        (17, 'R2017'),
+        (19, 'R2019')
+    )
+    regulation = models.IntegerField(choices= choices, default = 15)
+    choices1 = ((4, 4), (5, 5), (6, 6))
+    no_of_CO = models.IntegerField(choices = choices1, default = 4)
+    def __str__(self):
+        return 'Regulation : {0} No of COs : {1}'.format(self.regulation, self.no_of_CO)
 
 class UploadAssignmentMarks(models.Model):
 
@@ -91,9 +100,10 @@ class UploadAssignmentMarks(models.Model):
 class UploadSemesterMarks(models.Model):
     reg_num = models.CharField(max_length=10, blank=False)
     student_name = models.CharField(max_length=50, blank=False)
-    sem_marks = models.DecimalField(max_digits=7, decimal_places=4)
-    no_of_CO = models.IntegerField(default=1,validators=[MaxValueValidator(10), MinValueValidator(1)])
-    marks_for_each_CO = models.IntegerField(blank=False,validators=[MaxValueValidator(50), MinValueValidator(1)])
+    grade = models.CharField(default = "", max_length=10, blank=False)
+    # sem_marks = models.DecimalField(max_digits=7, decimal_places=4)
+    # no_of_CO = models.IntegerField(default=1,validators=[MaxValueValidator(10), MinValueValidator(1)])
+    # marks_for_each_CO = models.IntegerField(blank=False,validators=[MaxValueValidator(50), MinValueValidator(1)])
 
 class UploadInternalOneMarks(models.Model):
     id = models.AutoField(primary_key=True)
@@ -223,3 +233,14 @@ class UploadInternalTwoMarks(models.Model):
 
     def __str__(self):
         return 'Internal two Reg Num : {0} Name : {1}'.format(self.reg_num, self.student_name)
+
+class TotalCOStudent(models.Model):
+
+    reg_num = models.CharField(max_length=10, blank=False, default='')
+    student_name = models.CharField(max_length=50, blank=False, default ='')
+    co1 = models.DecimalField(max_digits=6, decimal_places=4, default=0)
+    co2 = models.DecimalField(max_digits=6, decimal_places=4, default=0)
+    co3 = models.DecimalField(max_digits=6, decimal_places=4, default=0)
+    co4 = models.DecimalField(max_digits=6, decimal_places=4, default =0)
+    co5 = models.DecimalField(max_digits=6, decimal_places=4, default=0)
+    co6 = models.DecimalField(max_digits=6, decimal_places=4, default=0)

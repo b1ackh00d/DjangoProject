@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Upload</title>
+  <title>Result</title>
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <meta content="" name="keywords">
   <meta content="" name="description">
@@ -73,56 +73,50 @@
   <!--==========================
     Intro Section
   ============================-->
-  <br><br><br><br><br>
-
-  <section id="intro">
-    <div class="container">
-    <div class="row">
-
-        <div class="row table-responsive">
-          <br>
-          <div class="button">
-            <a href="{% url 'show_marks_semester' %}" class="btn btn-primary btn-md" role="button"> Refresh</a>
-            <a href="{% url 'add_marks_semester' %}" class="btn btn-warning btn-sm" role="button"> +</a>
-          </div>
-          <br>
-            <table class="table table-hover table-stripped">
-              <thead>
-                <tr>
-                  <th>Regulation</th>
-                  <th>No. of CO's</th>
-                </tr>
-              </thead>
-
-              <tbody>
-
-                  {% for item in marks_items %}
-                  <tr>
-                    <td> {{ item.regulation }}</td>
-                    <td>{{ item.no_of_CO }}</td>
-                    <td>
-                      <a href="{% url 'edit_marks_semester' item.pk %}" class="btn btn-warning btn-sm" role="button"> Edit</a>
-                    </td>
-                    <td>
-                      <a href="{% url 'del_marks_semester' item.pk %}" class="btn btn-danger btn-sm" role="button"> Del</a>
-                    </td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-            </table>
-      </div>
-      <div class="container d-flex h-100">
-        <div class="col-md-6 intro-info order-md-first order-last">
-          <a href="{% url 'select_sub' %}" class="btn-get-started scrollto"> Go Back and Upload Remaining </a>
-        </div>
-        <div class="col-md-6 intro-info order-md-first order-last">
-          <a href="{% url 'upload_semester_marks' %}" class="btn-get-started scrollto"> Upload Semester Marks </a>
-        </div>
-      </div>
-  </section>
-
-
 <br><br><br><br><br>
+  <section id="intro" >
+    <div class="container h-50">
+      <div class="row">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Reg Num</th>
+                <th>Student Name</th>
+                <th>CO1</th>
+                <th>CO2</th>
+                <th>CO3</th>
+                <th>CO4</th>
+                <th>CO5</th>
+                <th>CO6</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for item in marks_items %}
+                <tr>
+
+                  <td> {{ item.reg_num }}</td>
+                  <td>{{ item.student_name }}</td>
+                  <td>{{ item.co1 }}</td>
+                  <td>{{ item.co2 }}</td>
+                  <td>{{ item.co3 }}</td>
+                  <td>{{ item.co4 }}</td>
+                  <td>{{ item.co5 }}</td>
+                  <td>{{ item.co6 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+    </div>
+    <div class="container text-center ">
+      <div class="intro-info  order-last p-5 border">
+        <a href="{% url 'result_detail' %}" class="btn-get-started scrollto"> Result </a>
+      </div>
+    </div>
+    </div>
+  </section>
+</br></br></br></br></br>
 
 
 

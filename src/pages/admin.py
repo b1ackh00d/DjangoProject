@@ -14,6 +14,7 @@ from import_export.admin import ImportExportModelAdmin
 @admin.register(UploadInternalTwoMarks)
 @admin.register(UploadAssignmentMarks)
 @admin.register(UploadSemesterMarks)
+@admin.register(TotalCOStudent)
 
 class ViewStudentDetails(ImportExportModelAdmin):
     pass

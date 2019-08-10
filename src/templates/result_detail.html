@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Upload</title>
+  <title>Result</title>
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <meta content="" name="keywords">
   <meta content="" name="description">
@@ -21,6 +21,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <!-- Bootstrap CSS File -->
   <link href="/static/pages/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel = "stylesheet">
 
   <!-- Libraries CSS Files -->
   <link href="/static/pages/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -73,56 +74,60 @@
   <!--==========================
     Intro Section
   ============================-->
-  <br><br><br><br><br>
+<br><br><br><br><br>
+  <section id="intro">
+    <br><br>
 
+    <div class="container">
+      <div>
+        <h4>Total Number of CO's for this Course : <span class = "label label-danger"> {{ no_of_CO }} </span></h4>
+      </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <h4><dt>Overall Weightage of each CO :</dt></h4>
+        <div class="row">
+          {% for key,value in weightage.items %}
+            <div class="col-sm-7"><h4>Course Outcome {{ key }} : <span class = "label label-primary">{{ value }}</span></h4></div>
+          {% endfor %}
+        </div>
+        <h4><dt>Target Marks :</dt></h4>
+        <div class="row">
+          {% for item in target_co_student %}
+            <div class="col-sm-7"><h4>Course Outcome {{ item.co_num }} : <span class = "label label-success">{{ item.target_co }}</span></h4></div>
+          {% endfor %}
+        </div>
+    </div>
+    <div class="col-sm-6">
+      <h4><dt>Number of Students above Target Marks :</dt></h4>
+      <div class="row">
+        {% for key,value in above_target.items %}
+          <div class="col-sm-7"><h4>Course Outcome {{ key }} : <span class = "label label-warning">{{ value }} out of {{ total }}</span></h4></div>
+        {% endfor %}
+      </div>
+      <h4><dt>Final Achievement</dt></h4>
+      <div class="row">
+        {% for key,value in final_achievement.items %}
+          <div class="col-sm-7"><h4>Course Outcome {{ key }} : <span class = "label label-danger">{{ value }} %</span></h4></div>
+        {% endfor %}
+      </div>
+  </div>
+
+
+  </section>
   <section id="intro">
     <div class="container">
+      <h2><dt>Final Result: </dt></h2><br>
     <div class="row">
 
-        <div class="row table-responsive">
-          <br>
-          <div class="button">
-            <a href="{% url 'show_marks_semester' %}" class="btn btn-primary btn-md" role="button"> Refresh</a>
-            <a href="{% url 'add_marks_semester' %}" class="btn btn-warning btn-sm" role="button"> +</a>
-          </div>
-          <br>
-            <table class="table table-hover table-stripped">
-              <thead>
-                <tr>
-                  <th>Regulation</th>
-                  <th>No. of CO's</th>
-                </tr>
-              </thead>
-
-              <tbody>
-
-                  {% for item in marks_items %}
-                  <tr>
-                    <td> {{ item.regulation }}</td>
-                    <td>{{ item.no_of_CO }}</td>
-                    <td>
-                      <a href="{% url 'edit_marks_semester' item.pk %}" class="btn btn-warning btn-sm" role="button"> Edit</a>
-                    </td>
-                    <td>
-                      <a href="{% url 'del_marks_semester' item.pk %}" class="btn btn-danger btn-sm" role="button"> Del</a>
-                    </td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-            </table>
-      </div>
-      <div class="container d-flex h-100">
-        <div class="col-md-6 intro-info order-md-first order-last">
-          <a href="{% url 'select_sub' %}" class="btn-get-started scrollto"> Go Back and Upload Remaining </a>
-        </div>
-        <div class="col-md-6 intro-info order-md-first order-last">
-          <a href="{% url 'upload_semester_marks' %}" class="btn-get-started scrollto"> Upload Semester Marks </a>
-        </div>
-      </div>
+      <div class="col-sm-10">
+      {% for key,value in achieve_or_not.items %}
+        <div class="col-sm-7"><h4>Course Outcome {{ key }} is <span class = "label label-danger">{{ value }} </span></h4></div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
   </section>
-
-
-<br><br><br><br><br>
+</br></br></br></br></br>
 
 
 
@@ -144,6 +149,8 @@
     <script src="/static/pages/lib/lightbox/js/lightbox.min.js"></script>
     <!-- Contact Form JavaScript File -->
     <script src="/static/pages/contactform/contactform.js"></script>
+    <script src = "https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src = "https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 
     <!-- Template Main Javascript File -->
     <script src="/static/pages/js/main.js"></script>

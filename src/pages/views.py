@@ -2,6 +2,7 @@ import csv, io
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.http import HttpResponse
+from django.db.models import *
 from .forms import *
 from .models import *
 
@@ -58,6 +59,7 @@ def show_marks_attributes(request, model, html_file):
     target_cls_iems = TargetCOClass.objects.all()
     items = model.objects.all()
     context = {
+        'range' : range(1, Student_details.objects.count() + 1),
         'marks_items' : items,
         'target_co_stu' : target_stu_items,
         'target_co_cls' : target_cls_iems,
@@ -254,7 +256,7 @@ def upload_semester_marks(request):
             id = column[0],
             reg_num = column[1],
             student_name = column[2],
-            sem_marks = column[3],no_of_CO = column[4], marks_for_each_CO = column[5]
+            grade = column[3]
         )
     context = {}
     return render(request, template, context)
@@ -289,39 +291,130 @@ def drop_semester_table(request):
 
 # Calculations
 
-def CO1_Calculation(request, model1, model2, model3):
-    total_internal_one = model1.objects.filter(CO_for_each_qn=1).aggregate(Sum('marks_for_each_qn'))['marks_for_each_qn__sum'] #int
-    total_assignment = model2.objects.filter(co_num=1).aggregate(Sum('total_marks_for_co'))['total_marks_for_co__sum'] #dict
-    i = list(UploadSemesterMarks.objects.all())
-    total_semester = i[0].marks_for_each_CO #int
+#returns assignment_total_marks_of a single student for any CO
+def func1(id__1, cls, co):
+     cos = ['CO1', 'CO2', 'CO3', 'CO4', 'CO5', 'CO6']
+     co_in = "CO" + str(co)
+     if co_in in cos:
+         t = list(cls.objects.filter(id = id__1).values())
+         return float(t[0].get(co_in))
+     else:
+         return float(0)
 
-# co1_type_qn's
-# for i in Internal_one_Total_marks.objects.filter(CO_for_each_qn=1):
-# ...     co1.append(i.qn_num)
-
-
-    context = {
-
-    }
-    return render(request, "result_1.html", context)
-
-
-# for i in Internal_one_Total_marks.objects.filter(CO_for_each_qn=1):
-#         co1.append("qn" + str(i.qn_num))
-
-
-def func(id__1, cls):
-     total = 0
+#returns semester mark of a single student
+def func2(id__1, cls):
+     R2017 = {'A': 75.5, 'A+': 85.5, 'B': 55, 'B+': 65.5, 'O': 95.5, 'RA': 24.5, 'RA-AB': 0, 'SA': 0, 'W': 0}
      l = list(cls.objects.filter(id = id__1).values())
-     co = ['qn1', 'qn2', 'qn6', 'qn8', 'qn9', 'qn11', 'qn12', 'qn13', 'qn16', 'qn17', 'qn18']
-     for i in co:
+     if l[0].get('grade') in R2017:
+         return float(R2017[l[0].get('grade')])
+
+#returns total marks of a student for a given CO
+def func(id__1, cls, co, c_o):
+    l = list(Semester_Total_marks.objects.all().values())
+    total_co =  l[0].get('no_of_CO')
+    if (c_o <= total_co):
+        total = 0
+        l = list(cls.objects.filter(id = id__1).values())
+        for i in co:
              for j in l[0]:
                      if (i == j):
                              total += l[0].get(j)
-     return total
+        assignment_marks = func1(id__1, UploadAssignmentMarks, c_o)
+        semester_marks = func2(id__1, UploadSemesterMarks) / total_co
+        return float(total) + assignment_marks + semester_marks
+    else:
+        return 0
+     # func(i => studend_id, UploadInternalTwoMarks, giveCOqns(Internal_two_Total_marks, 3)
 
 def giveCOqns(cls, co):
      res = []
      for i in cls.objects.filter(CO_for_each_qn=co):
              res.append("qn" + str(i.qn_num))
      return res
+
+def return_totalmarks(i, internalone, internaltwo, assignment, semester):
+    l = list(Semester_Total_marks.objects.all().values())
+    if (i <= l[0].get('no_of_CO')):
+        total_internal_one = internalone.objects.filter(CO_for_each_qn=i).aggregate(Sum('marks_for_each_qn'))['marks_for_each_qn__sum']
+        total_internal_two = internaltwo.objects.filter(CO_for_each_qn=i).aggregate(Sum('marks_for_each_qn'))['marks_for_each_qn__sum']
+        if (total_internal_one is None):
+            total_internal_one = 0
+        if (total_internal_two is None):
+            total_internal_two = 0
+        total_assignment = assignment.objects.filter(co_num=i).aggregate(Sum('total_marks_for_co'))['total_marks_for_co__sum']
+        sem_total = list(semester.objects.all().values())
+        total_semester = 100 /l[0].get('no_of_CO')
+        return float(total_internal_one) + float(total_internal_two) + total_assignment + total_semester
+    else:
+        return 0
+
+# for i in range(1, Student_details.objects.count() + 1):
+#     t = func(i, UploadInternalOneMarks, giveCOqns(Internal_one_Total_marks, 1),1) / return_totalmarks(1, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
+#     print(round(t, 3))
+
+def total():
+    for i in range(1, Student_details.objects.count() + 1):
+        c1 = func(i, UploadInternalOneMarks, giveCOqns(Internal_one_Total_marks, 1),1) / return_totalmarks(1, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
+        c2 = func(i, UploadInternalOneMarks, giveCOqns(Internal_one_Total_marks, 2),2) / return_totalmarks(1, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
+        c3 = func(i, UploadInternalTwoMarks, giveCOqns(Internal_two_Total_marks, 3),3) / return_totalmarks(1, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
+        c4 = func(i, UploadInternalTwoMarks, giveCOqns(Internal_two_Total_marks, 4),4) / return_totalmarks(1, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
+        c5 = func(i, UploadInternalTwoMarks, giveCOqns(Internal_two_Total_marks, 5),5) / return_totalmarks(1, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
+        c6 = func(i, UploadInternalTwoMarks, giveCOqns(Internal_two_Total_marks, 6),6) / return_totalmarks(1, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
+        l = Student_details.objects.filter(id = i).values()
+        total = TotalCOStudent(reg_num = l[0].get('reg_num'), student_name = l[0].get('student_name'), co1 = c1, co2 = c2, co3 = c3, co4 = c4, co5 = c5, co6 = c6)
+        total.save()
+
+def calculate_CO(request, *args, **kwargs):
+    total()
+    return render(request, "subject.html", {'form' : 'Calculated, Press Dispaly Button'})
+
+def show_CO_result(request):
+    return show_marks_attributes(request, TotalCOStudent, "total_co_student.html")
+
+def result_detail(request):
+    l = list(Semester_Total_marks.objects.all().values())
+    no_of_CO = l[0].get('no_of_CO')
+    weightage_of_CO = {}
+    above_target = {}
+    final_achievement = {}
+    above_target_class = above_Targetclass()
+    achieved_or_not = {}
+    target_co_student = TargetCOStudent.objects.all()
+    for i in range(1, no_of_CO + 1):
+        weightage_of_CO.update({ i : str(return_totalmarks(i, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks))})
+        above_target.update({ i : str(students_above_targetMarks(i))})
+        t = (float(above_target[i]) / Student_details.objects.count()) * 100
+        final_achievement.update({i : round(t, 3)})
+        if (final_achievement[i] >= above_target_class.get(i)):
+            achieved_or_not.update({ i : 'Achieved'})
+        else:
+            achieved_or_not.update({ i : 'Not Achieved'})
+    context = {
+        'achieve_or_not' : achieved_or_not,
+        'total' : Student_details.objects.count(),
+        'no_of_CO' : no_of_CO,
+        'target_co_student' : target_co_student,
+        'weightage' : weightage_of_CO,
+        'above_target' : above_target,
+        'final_achievement' : final_achievement
+    }
+    return render(request, "result_detail.html", context)
+
+def students_above_targetMarks(co):
+     count = 0
+     for i in range(1, Student_details.objects.count() + 1):
+             l =list(TargetCOStudent.objects.filter(co_num = co).values())
+             target = float(l[0].get('target_co'))
+             p = list(Student_details.objects.filter(id = i).values())[0].get('reg_num')
+             k = list(TotalCOStudent.objects.filter(reg_num = p).values())[0].get('co' + str(co))
+             if(k >= target):
+                     count+=1
+     return count
+
+def above_Targetclass():
+     achieve_or_not = {}
+     l = list(Semester_Total_marks.objects.all().values())
+     for i in range(1, l[0].get('no_of_CO') + 1):
+         t = TargetCOClass.objects.filter(co_num = i).values()
+         achieve_or_not.update( { i : float(t[0].get('target_co'))} )
+     return achieve_or_not
