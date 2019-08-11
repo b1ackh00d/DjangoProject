@@ -1,7 +1,7 @@
-import csv, io
-from django.shortcuts import render, get_object_or_404, redirect
+import csv, io, itertools
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.contrib import messages
-from django.http import HttpResponse
+from django.contrib.auth.decorators import permission_required
 from django.db.models import *
 from .forms import *
 from .models import *
@@ -47,7 +47,6 @@ def edit_attributes(request, pk, model, cls, page):
 
 def del_attributes(request, pk, model, html_file):
     model.objects.filter(id=pk).delete()
-
     items = model.objects.all()
     context = {
         'items' : items
@@ -303,10 +302,15 @@ def func1(id__1, cls, co):
 
 #returns semester mark of a single student
 def func2(id__1, cls):
-     R2017 = {'A': 75.5, 'A+': 85.5, 'B': 55, 'B+': 65.5, 'O': 95.5, 'RA': 24.5, 'RA-AB': 0, 'SA': 0, 'W': 0}
-     l = list(cls.objects.filter(id = id__1).values())
-     if l[0].get('grade') in R2017:
-         return float(R2017[l[0].get('grade')])
+    if (Semester_Total_marks.objects.all().values()[0].get('regulation') == 17):
+        regulation = {'A': 75.5, 'A+': 85.5, 'B': 55, 'B+': 65.5, 'O': 95.5, 'RA': 24.5, 'RA-AB': 0, 'SA': 0, 'W': 0} #R2017
+    elif (Semester_Total_marks.objects.all().values()[0].get('regulation') == 15):
+        regulation = {'A': 74.5, 'A+': 84.5, 'B': 54.5, 'B+': 64.5, 'O': 95, 'RA': 24.5, 'RA-AB': 0, 'U': 0, 'W': 0} #R2015
+    else:
+        return float(0)
+    l = list(cls.objects.filter(id = id__1).values())
+    if l[0].get('grade') in regulation:
+        return float(regulation[l[0].get('grade')])
 
 #returns total marks of a student for a given CO
 def func(id__1, cls, co, c_o):
@@ -346,20 +350,20 @@ def return_totalmarks(i, internalone, internaltwo, assignment, semester):
         total_semester = 100 /l[0].get('no_of_CO')
         return float(total_internal_one) + float(total_internal_two) + total_assignment + total_semester
     else:
-        return 0
-
+        return 1
 # for i in range(1, Student_details.objects.count() + 1):
 #     t = func(i, UploadInternalOneMarks, giveCOqns(Internal_one_Total_marks, 1),1) / return_totalmarks(1, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
 #     print(round(t, 3))
 
 def total():
+    TotalCOStudent.objects.all().delete()
     for i in range(1, Student_details.objects.count() + 1):
         c1 = func(i, UploadInternalOneMarks, giveCOqns(Internal_one_Total_marks, 1),1) / return_totalmarks(1, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
-        c2 = func(i, UploadInternalOneMarks, giveCOqns(Internal_one_Total_marks, 2),2) / return_totalmarks(1, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
-        c3 = func(i, UploadInternalTwoMarks, giveCOqns(Internal_two_Total_marks, 3),3) / return_totalmarks(1, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
-        c4 = func(i, UploadInternalTwoMarks, giveCOqns(Internal_two_Total_marks, 4),4) / return_totalmarks(1, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
-        c5 = func(i, UploadInternalTwoMarks, giveCOqns(Internal_two_Total_marks, 5),5) / return_totalmarks(1, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
-        c6 = func(i, UploadInternalTwoMarks, giveCOqns(Internal_two_Total_marks, 6),6) / return_totalmarks(1, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
+        c2 = func(i, UploadInternalOneMarks, giveCOqns(Internal_one_Total_marks, 2),2) / return_totalmarks(2, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
+        c3 = func(i, UploadInternalTwoMarks, giveCOqns(Internal_two_Total_marks, 3),3) / return_totalmarks(3, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
+        c4 = func(i, UploadInternalTwoMarks, giveCOqns(Internal_two_Total_marks, 4),4) / return_totalmarks(4, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
+        c5 = func(i, UploadInternalTwoMarks, giveCOqns(Internal_two_Total_marks, 5),5) / return_totalmarks(5, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
+        c6 = func(i, UploadInternalTwoMarks, giveCOqns(Internal_two_Total_marks, 6),6) / return_totalmarks(6, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks) * 100
         l = Student_details.objects.filter(id = i).values()
         total = TotalCOStudent(reg_num = l[0].get('reg_num'), student_name = l[0].get('student_name'), co1 = c1, co2 = c2, co3 = c3, co4 = c4, co5 = c5, co6 = c6)
         total.save()
@@ -380,11 +384,13 @@ def result_detail(request):
     above_target_class = above_Targetclass()
     achieved_or_not = {}
     target_co_student = TargetCOStudent.objects.all()
+    target_student = {}
     for i in range(1, no_of_CO + 1):
         weightage_of_CO.update({ i : str(return_totalmarks(i, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks))})
         above_target.update({ i : str(students_above_targetMarks(i))})
+        target_student.update({ i : float(target_co_student.filter(id = i).values()[0].get('target_co')) })
         t = (float(above_target[i]) / Student_details.objects.count()) * 100
-        final_achievement.update({i : round(t, 3)})
+        final_achievement.update({i : round(t, 2)})
         if (final_achievement[i] >= above_target_class.get(i)):
             achieved_or_not.update({ i : 'Achieved'})
         else:
@@ -393,7 +399,7 @@ def result_detail(request):
         'achieve_or_not' : achieved_or_not,
         'total' : Student_details.objects.count(),
         'no_of_CO' : no_of_CO,
-        'target_co_student' : target_co_student,
+        'target_co_student' : target_student,
         'weightage' : weightage_of_CO,
         'above_target' : above_target,
         'final_achievement' : final_achievement
@@ -401,20 +407,116 @@ def result_detail(request):
     return render(request, "result_detail.html", context)
 
 def students_above_targetMarks(co):
-     count = 0
-     for i in range(1, Student_details.objects.count() + 1):
-             l =list(TargetCOStudent.objects.filter(co_num = co).values())
-             target = float(l[0].get('target_co'))
-             p = list(Student_details.objects.filter(id = i).values())[0].get('reg_num')
-             k = list(TotalCOStudent.objects.filter(reg_num = p).values())[0].get('co' + str(co))
-             if(k >= target):
-                     count+=1
-     return count
+    l = list(Semester_Total_marks.objects.all().values())
+    no_of_CO = l[0].get('no_of_CO')
+    count = 0
+    if(co <= no_of_CO):
+        for i in range(1, Student_details.objects.count() + 1):
+            l =list(TargetCOStudent.objects.filter(co_num = co).values())
+            target = float(l[0].get('target_co'))
+            p = list(Student_details.objects.filter(id = i).values())[0].get('reg_num')
+            k = list(TotalCOStudent.objects.filter(reg_num = p).values())[0].get('co' + str(co))
+            if(k >= target):
+                count+=1
+        return count
+    else:
+        return 0
 
 def above_Targetclass():
      achieve_or_not = {}
-     l = list(Semester_Total_marks.objects.all().values())
-     for i in range(1, l[0].get('no_of_CO') + 1):
+     # l = list(Semester_Total_marks.objects.all().values())
+     for i in range(1, 7):
          t = TargetCOClass.objects.filter(co_num = i).values()
          achieve_or_not.update( { i : float(t[0].get('target_co'))} )
      return achieve_or_not
+
+# download-csv_file
+
+def download_result(request):
+
+    items = TotalCOStudent.objects.all()
+    count = Student_details.objects.count()
+
+    l = list(Semester_Total_marks.objects.all().values())
+    no_of_CO = l[0].get('no_of_CO')
+    weightage_of_CO = {}
+    above_target = {}
+    target_student = {}
+    final_achievement = {}
+    above_target_class = above_Targetclass()
+    achieved_or_not = {}
+    target_co_student = TargetCOStudent.objects.all()
+    for i in range(1, 7):
+        if (i > no_of_CO):
+            weightage_of_CO.update({ i : '-'})
+        else:
+            weightage_of_CO.update({ i : str(return_totalmarks(i, Internal_one_Total_marks, Internal_two_Total_marks, Assignment, Semester_Total_marks))})
+        above_target.update({ i : str(students_above_targetMarks(i))})
+        t = (float(above_target[i]) / Student_details.objects.count()) * 100
+        final_achievement.update({i : round(t, 2)})
+        target_student.update({i : float(list(target_co_student.filter(co_num = i).values())[0].get('target_co'))})
+        if (final_achievement[i] >= above_target_class.get(i)):
+            if (i > no_of_CO):
+                achieved_or_not.update({ i : '-'})
+            else:
+                achieved_or_not.update({ i : 'Achieved'})
+        else:
+            if (i > no_of_CO):
+                achieved_or_not.update({ i : '-'})
+            else:
+                achieved_or_not.update({ i : 'Not Achieved'})
+
+    response = HttpResponse(content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="report.csv"'
+
+    writer = csv.writer(response, delimiter = ',')
+    writer.writerow(['Id', 'Reg_Num', 'Student_Name', 'CO1', 'CO2', 'CO3', 'CO4', 'CO5', 'CO6'])
+    weightageCO = [' ', ' ', ' Total Weightage of COs -->',weightage_of_CO[1],weightage_of_CO[2],weightage_of_CO[3],weightage_of_CO[4],weightage_of_CO[5],weightage_of_CO[6] ]
+    writer.writerow(weightageCO)
+    for (i, obj) in zip(range(1, count + 1), items):
+        writer.writerow([i, obj.reg_num, obj.student_name, obj.co1, obj.co2, obj.co3, obj.co4, obj.co5, obj.co6])
+    writer.writerow([' ',' ',' ',' ',' ',' ',' ',' ',' '])
+    target_marks = [' ', ' ', ' Target Marks',target_student[1],target_student[2],target_student[3],target_student[4],target_student[5],target_student[6] ]
+    writer.writerow(target_marks)
+    above_target_marks = [' ', ' ', ' No.of students who have secured above Target Marks',above_target[1],above_target[2],above_target[3],above_target[4],above_target[5],above_target[6] ]
+    writer.writerow(above_target_marks)
+    final_achievement = [' ', ' ', '% of students achieved CO',final_achievement[1],final_achievement[2],final_achievement[3],final_achievement[4],final_achievement[5],final_achievement[6] ]
+    writer.writerow(final_achievement)
+    achieved_or_not = [' ', ' ', 'Overall CO Result',achieved_or_not[1],achieved_or_not[2],achieved_or_not[3],achieved_or_not[4],achieved_or_not[5],achieved_or_not[6] ]
+    writer.writerow(achieved_or_not)
+
+
+    return response
+
+# pattern
+def qn_pattern(request, cls, html_file):
+    cls.objects.all().delete()
+    if (cls == Internal_two_Total_marks):
+        for i in range(1, 20):
+            if (i >= 11 and i<=15):
+                t = cls(qn_num = i, marks_for_each_qn = 2, CO_for_each_qn = 3)
+            elif (i>=16 and i<=19):
+                t = cls(qn_num = i, marks_for_each_qn = 10, CO_for_each_qn = 3)
+            else:
+                t = cls(qn_num = i, marks_for_each_qn = 1, CO_for_each_qn = 3)
+            t.save()
+    else:
+        for i in range(1, 20):
+            if (i >= 11 and i<=15):
+                t = cls(qn_num = i, marks_for_each_qn = 2, CO_for_each_qn = 1)
+            elif (i>=16 and i<=19):
+                t = cls(qn_num = i, marks_for_each_qn = 10, CO_for_each_qn = 1)
+            else:
+                t = cls(qn_num = i, marks_for_each_qn = 1, CO_for_each_qn = 1)
+            t.save()
+    return render(request, html_file, {})
+
+def pattern_one_internal_one(request):
+    qn_pattern(request, Internal_one_Total_marks, "internal_one_marks.html")
+    return show_marks_attributes(request, Internal_one_Total_marks, "internal_one_marks.html")
+
+def pattern_one_internal_two(request):
+    qn_pattern(request, Internal_two_Total_marks, "internal_two_marks.html")
+    return show_marks_attributes(request, Internal_two_Total_marks, "internal_two_marks.html")
+
+# pattern two , pattern three and so on

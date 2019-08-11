@@ -76,6 +76,11 @@
     <div class="container d-flex h-50">
       <div class="row justify-content-left align-self-center">
         <div class="col-md-11 intro-info order-md-first order-last">
+          <div>
+            <br><br><br><br><br><br>
+            <h5><dt> Instructions </dt></h6>
+            <h7>1) <i>First <strong>Upload Student</strong> details.</i></h7><br>
+          </div><br><br>
           <h5>Select Subject</h5>
         <a href="{% url 'select_sub' %}" style="margin:5px;" class="btn btn-outline-primary">Software Engineering</a>
         <a href="{% url 'select_sub' %}" style="margin:5px;" class="btn btn-outline-secondary">Cryptography</a>
@@ -86,12 +91,13 @@
       </div>
 
     </div>
+        <br><br><br><br>
     <div class="container d-flex h-100">
       <div class="col-md-6 intro-info order-md-first order-last">
-        <a href="{% url 'display_student' %}" class="btn-get-started scrollto"> Display Students Details </a>
+        <a href="{% url 'upload_student' %}" class="btn btn-danger scrollto"> Upload Students Details</a>
       </div>
       <div class="col-md-6 intro-info order-md-first order-last">
-        <a href="{% url 'upload_student' %}" class="btn-get-started scrollto"> Upload Students Details</a>
+        <a href="{% url 'display_student' %}" class="btn-get-started scrollto"> Display Students Details </a>
       </div>
     </div>
   </section>

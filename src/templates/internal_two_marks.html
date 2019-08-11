@@ -83,6 +83,11 @@
           <div class="button">
             <a href="{% url 'show_marks_internal_two' %}" class="btn btn-primary btn-md" role="button"> Refresh</a>
             <a href="{% url 'add_marks_internal_two' %}" class="btn btn-warning btn-sm" role="button"> +</a>
+            <div class="text-center">
+            <a href="{% url 'pattern_one_internal_two' %}" class="btn btn-danger btn-md" role="button" style="margin:5px;"> Pattern <strong>1</strong></a>
+            <a href="#" class="btn btn-success btn-md" role="button" style="margin:5px;"> Pattern <strong>2</strong></a>
+            <a href="#" class="btn btn-primary btn-md" role="button" style="margin:5px;"> Pattern <strong>3</strong></a>
+          </div>
           </div>
           <br>
             <table class="table table-hover table-stripped">
@@ -114,7 +119,7 @@
       </div>
       <div class="container d-flex h-100">
         <div class="col-md-6 intro-info order-md-first order-last p-5 border">
-          <a href="{% url 'select_sub' %}" class="btn-get-started scrollto"> Go Back and Upload Remaining </a>
+          <a href="{% url 'select_sub' %}" class="btn btn-outline-danger scrollto"> Go Back and Upload Remaining </a>
         </div>
         <div class="col-md-6 intro-info order-md-first order-last p-5 border">
           <a href="{% url 'upload_internal_two' %}" class="btn-get-started scrollto"> Upload Internal Two Marks </a>

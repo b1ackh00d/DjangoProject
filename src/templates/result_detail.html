@@ -82,6 +82,7 @@
       <div>
         <h4>Total Number of CO's for this Course : <span class = "label label-danger"> {{ no_of_CO }} </span></h4>
       </div>
+        <a href="{% url 'download_result' %}" class="btn btn-primary scrollto">Download Report</a><br><br>
     <div class="row">
       <div class="col-sm-6">
         <h4><dt>Overall Weightage of each CO :</dt></h4>
@@ -90,25 +91,30 @@
             <div class="col-sm-7"><h4>Course Outcome {{ key }} : <span class = "label label-primary">{{ value }}</span></h4></div>
           {% endfor %}
         </div>
-        <h4><dt>Target Marks :</dt></h4>
+        <h4><dt>Number of Students above Target Marks :</dt></h4>
         <div class="row">
-          {% for item in target_co_student %}
-            <div class="col-sm-7"><h4>Course Outcome {{ item.co_num }} : <span class = "label label-success">{{ item.target_co }}</span></h4></div>
+          {% for key,value in above_target.items %}
+            <div class="col-sm-7"><h4>Course Outcome {{ key }} : <span class = "label label-warning">{{ value }} out of {{ total }}</span></h4></div>
           {% endfor %}
         </div>
+
     </div>
+
     <div class="col-sm-6">
-      <h4><dt>Number of Students above Target Marks :</dt></h4>
+      <h4><dt>Target Marks :</dt></h4>
       <div class="row">
-        {% for key,value in above_target.items %}
-          <div class="col-sm-7"><h4>Course Outcome {{ key }} : <span class = "label label-warning">{{ value }} out of {{ total }}</span></h4></div>
+        {% for key,value in target_co_student.items %}
+          <div class="col-sm-7"><h4>Course Outcome {{ key }} : <span class = "label label-success">{{ value }}</span></h4></div>
         {% endfor %}
       </div>
+
+
       <h4><dt>Final Achievement</dt></h4>
       <div class="row">
         {% for key,value in final_achievement.items %}
           <div class="col-sm-7"><h4>Course Outcome {{ key }} : <span class = "label label-danger">{{ value }} %</span></h4></div>
         {% endfor %}
+
       </div>
   </div>
 
@@ -121,18 +127,18 @@
 
       <div class="col-sm-10">
       {% for key,value in achieve_or_not.items %}
-        <div class="col-sm-7"><h4>Course Outcome {{ key }} is <span class = "label label-danger">{{ value }} </span></h4></div>
+        <div class="col-sm-7"><h4>Course Outcome {{ key }} is <span class = "label label-success">{{ value }} </span></h4></div>
       {% endfor %}
     </div>
   </div>
 </div>
+
   </section>
 </br></br></br></br></br>
 
 
 
     <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
-    <!-- Uncomment below i you want to use a preloader -->
     <!-- <div id="preloader"></div> -->
 
     <!-- JavaScript Libraries -->
